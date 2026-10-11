@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITE IA | Crie sites com Inteligência Artificial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#000000',
+                        darker: '#050508',
+                        gray: {
+                            900: '#111111',
+                            800: '#222222',
+                            700: '#333333',
+                            600: '#444444',
+                            500: '#6B7280',
+                            400: '#9CA3AF',
+                            300: '#D1D5DB',
+                            200: '#E5E7EB',
+                            100: '#F3F4F6',
+                        },
+                        accent: '#4F46E5',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Inter', 'sans-serif'],
+                    },
+                }
+            },
+            darkMode: 'class',
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .gradient-text {
+                @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400;
+            }
+            .card-hover {
+                @apply transition-all duration-300 hover:border-gray-700 hover:-translate-y-1;
+            }
+            .btn-primary {
+                @apply bg-white text-black font-semibold py-2.5 px-6 rounded-lg hover:bg-gray-200 transition-all duration-200;
+            }
+            .btn-accent {
+                @apply bg-indigo-600 text-white font-semibold py-2.5 px-6 rounded-lg hover:bg-indigo-700 transition-all duration-200;
+            }
+            .btn-secondary {
+                @apply border border-gray-700 text-gray-300 font-medium py-2.5 px-6 rounded-lg hover:bg-gray-900 hover:text-white transition-all duration-200;
+            }
+            .input-field {
+                @apply w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors;
+            }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="font-sans bg-black text-gray-100 min-h-screen">
+
+    <!-- Navegação -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="#" class="flex items-center gap-2">
+                    <i class="fa fa-magic text-indigo-500 text-xl"></i>
+                    <span class="text-xl font-bold tracking-tight">SITE IA</span>
+                </a>
+                
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#recursos" class="text-gray-400 hover:text-white transition-colors">Recursos</a>
+                    <a href="#exemplos" class="text-gray-400 hover:text-white transition-colors">Exemplos</a>
+                    <a href="#planos" class="text-gray-400 hover:text-white transition-colors">Planos</a>
+                    <button id="btnLogin" class="text-gray-400 hover:text-white flex items-center gap-1">
+                        <i class="fa fa-sign-in"></i> Entrar
+                    </button>
+                    <button id="btnCadastro" class="btn-primary text-sm py-2">Criar Conta</button>
+                </div>
+
+                <button id="menuToggle" class="md:hidden text-white">
+                    <i class="fa fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Mobile -->
+        <div id="mobileMenu" class="md:hidden hidden bg-black border-b border-gray-900 px-4 py-4 space-y-3">
+            <a href="#recursos" class="block py-2 text-gray-400">Recursos</a>
+            <a href="#exemplos" class="block py-2 text-gray-400">Exemplos</a>
+            <a href="#planos" class="block py-2 text-gray-400">Planos</a>
+            <button id="btnLoginMobile" class="block py-2 text-gray-400 w-full text-left">Entrar</button>
+            <button id="btnCadastroMobile" class="btn-primary w-full text-center mt-2">Criar Conta</button>
+        </div>
+    </nav>
+
+    <main class="pt-28 pb-20">
+        <!-- Hero Section -->
+        <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-28">
+            <div class="inline-flex items-center gap-2 bg-gray-900 border border-gray-800 rounded-full px-4 py-2 mb-8">
+                <i class="fa fa-bolt text-yellow-400"></i>
+                <span class="text-sm text-gray-400">Inteligência Artificial generativa ao seu alcance</span>
+            </div>
+            
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+                Crie seu site com o poder da <span class="gradient-text">IA</span>.
+            </h1>
+            <p class="text-lg sm:text-xl text-gray-400 max-w-3xl mx-auto mb-12">
+                Descreva sua ideia. Nossa inteligência artificial transforma sua visão em um site funcional, personalizado e pronto para publicar.
+            </p>
+
+            <!-- Caixa de Prompt -->
+            <div class="relative max-w-3xl mx-auto">
+                <div id="promptContainer" class="bg-gray-900 border border-gray-800 rounded-2xl p-1 transition-all duration-300 focus-within:border-indigo-500 shadow-lg">
+                    <textarea
+                        id="userPrompt"
+                        placeholder="Descreva o site que você deseja criar..."
+                        class="w-full bg-transparent text-white placeholder-gray-500 text-lg p-4 resize-none focus:outline-none h-28"
+                    ></textarea>
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 pb-3 gap-3">
+                        <span class="text-sm text-gray-500">Quanto mais detalhes, melhor o resultado</span>
+                        <button id="btnGerarSite" class="btn-accent inline-flex items-center gap-2">
+                            <i class="fa fa-magic"></i> Criar meu site com IA
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exemplos -->
+            <div class="mt-12">
+                <p class="text-sm text-gray-500 mb-4">Experimente um destes exemplos:</p>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <button class="exemplo-btn text-sm bg-gray-900 border border-gray-800 text-gray-300 px-4 py-2 rounded-full hover:bg-gray-800 transition-all">
+                        🏪 Loja de roupas com catálogo e carrinho
+                    </button>
+                    <button class="exemplo-btn text-sm bg-gray-900 border border-gray-800 text-gray-300 px-4 py-2 rounded-full hover:bg-gray-800 transition-all">
+                        🍽️ Cardápio digital para restaurante
+                    </button>
+                    <button class="exemplo-btn text-sm bg-gray-900 border border-gray-800 text-gray-300 px-4 py-2 rounded-full hover:bg-gray-800 transition-all">
+                        📸 Portfólio para fotógrafo
+                    </button>
+                    <button class="exemplo-btn text-sm bg-gray-900 border border-gray-800 text-gray-300 px-4 py-2 rounded-full hover:bg-gray-800 transition-all">
+                        📅 Sistema de agendamento
+                    </button>
+                    <button class="exemplo-btn text-sm bg-gray-900 border border-gray-800 text-gray-300 px-4 py-2 rounded-full hover:bg-gray-800 transition-all">
+                        🏢 Site institucional para minha empresa
+                    </button>
+                    <button class="exemplo-btn text-sm bg-gray-900 border border-gray-800 text-gray-300 px-4 py-2 rounded-full hover:bg-gray-800 transition-all">
+                        📝 Blog com artigos e notícias
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resultado da Geração -->
+        <section id="resultadoSecao" class="hidden max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-28">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold mb-2">Seu Site</h2>
+                <p class="text-gray-400">Visualize, edite e publique seu projeto</p>
+            </div>
+
+            <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-2xl">
+                <!-- Barra de Ferramentas -->
+                <div class="bg-gray-800 px-4 py-3 flex items-center justify-between border-b border-gray-700">
+                    <div class="flex items-center gap-2">
+                        <button id="btnDesktop" class="p-2 text-gray-400 hover:text-white border-b-2 border-indigo-500">
+                            <i class="fa fa-desktop"></i>
+                        </button>
+                        <button id="btnTablet" class="p-2 text-gray-400 hover:text-white">
+                            <i class="fa fa-tablet"></i>
+                        </button>
+                        <button id="btnMobile" class="p-2 text-gray-400 hover:text-white">
+                            <i class="fa fa-mobile"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button id="btnEditarCodigo" class="btn-secondary text-sm py-1.5 px-3">
+                            <i class="fa fa-code mr-1"></i> Ver Código
+                        </button>
+                        <button id="btnPublicar" class="btn-accent text-sm py-1.5 px-3">
+                            <i class="fa fa-globe mr-1"></i> Publicar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Área de Prévia -->
+                <div id="previewContainer" class="bg-white min-h-[400px]">
+                    <iframe id="sitePreview" class="w-full h-[500px] border-0"></iframe>
+                </div>
+
+                <!-- Área de Chat com IA para alterações -->
+                <div class="border-t border-gray-800 p-4">
+                    <p class="text-sm text-gray-400 mb-3">Quer mudar algo? Peça para a IA:</p>
+                    <div class="flex gap-2">
+                        <input type="text" id="alteracaoInput" placeholder="Ex: Mude as cores para azul e branco" class="input-field flex-1">
+                        <button id="btnSolicitarAlteracao" class="btn-accent whitespace-nowrap">
+                            <i class="fa fa-refresh mr-1"></i> Alterar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recursos -->
+        <section id="recursos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-28">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Tudo que você precisa</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Uma plataforma completa para transformar ideias em sites profissionais sem escrever uma linha de código.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-6 card-hover">
+                    <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-indigo-400 mb-4">
+                        <i class="fa fa-robot text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">IA que Entende Você</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Converse com a inteligência artificial. Ela faz perguntas e cria exatamente o que você precisa.</p>
+                </div>
+
+                <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-6 card-hover">
+                    <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-indigo-400 mb-4">
+                        <i class="fa fa-paint-brush text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Visual e Intuitivo</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Edite textos, imagens e cores com um clique. Veja as alterações em tempo real.</p>
+                </div>
+
+                <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-6 card-hover">
+                    <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-indigo-400 mb-4">
+                        <i class="fa fa-globe text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Publique com Um Clique</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Seu site na internet em segundos. Use nosso subdomínio ou conecte seu domínio próprio.</p>
+                </div>
+
+                <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-6 card-hover">
+                    <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-indigo-400 mb-4">
+                        <i class="fa fa-code text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Código Profissional</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">HTML, CSS e JavaScript otimizados, responsivos e prontos para qualquer dispositivo.</p>
+                </div>
+
+                <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-6 card-hover">
+                    <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-indigo-400 mb-4">
+                        <i class="fa fa-lock text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Segurança Total</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Dados protegidos, certificado SSL automático e backups do seu projeto.</p>
+                </div>
+
+                <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-6 card-hover">
+                    <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-indigo-400 mb-4">
+                        <i class="fa fa-cogs text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Sempre Evoluindo</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Basta pedir: "adicione uma seção de depoimentos" e a IA faz para você.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Como Funciona -->
+        <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-28">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Como funciona?</h2>
+                <p class="text-gray-400">Três passos simples para ter seu site no ar</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-gray-800 mb-4">01</div>
+                    <h3 class="text-xl font-semibold mb-2">Descreva sua ideia</h3>
+                    <p class="text-gray-400">Conte para a IA o que você precisa. Quanto mais detalhes, melhor o resultado.</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-gray-800 mb-4">02</div>
+                    <h3 class="text-xl font-semibold mb-2">Edite e personalize</h3>
+                    <p class="text-gray-400">A IA cria o site. Você ajusta textos, imagens e cores com facilidade.</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-gray-800 mb-4">03</div>
+                    <h3 class="text-xl font-semibold mb-2">Publique na internet</h3>
+                    <p class="text-gray-400">Clique em publicar e seu site estará online para o mundo acessar.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Planos -->
+        <section id="planos" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-28">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Escolha seu plano</h2>
+                <p class="text-gray-400">Comece grátis e evolua conforme seu negócio cresce</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Grátis -->
+                <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-8 flex flex-col card-hover">
+                    <h3 class="text-xl font-bold mb-1">Grátis</h3>
+                    <p class="text-sm text-gray-500 mb-4">Para começar</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold">R$0</span>
+                        <span class="text-gray-500">/mês</span>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-1">
+                        <li class="flex items-start gap-2 text-sm">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span>1 site</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span>Subdomínio gratuito</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span>Modelos básicos</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm text-gray-500">
+                            <i class="fa fa-times text-gray-600 mt-1"></i>
+                            <span>Domínio próprio</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm text-gray-500">
+                            <i class="fa fa-times text-gray-600 mt-1"></i>
+                            <span>IA avançada</span>
+                        </li>
+                    </ul>
+                    <button class="btn-secondary w-full">Começar grátis</button>
+                </div>
+
+                <!-- Profissional -->
+                <div class="bg-indigo-600/10 border-2 border-indigo-500 rounded-xl p-8 flex flex-col relative scale-105 shadow-lg shadow-indigo-500/10">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-medium px-3 py-1 rounded-full">Mais Popular</div>
+                    <h3 class="text-xl font-bold mb-1">Profissional</h3>
+                    <p class="text-sm text-gray-400 mb-4">Para negócios em crescimento</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold">R$50</span>
+                        <span class="text-gray-400">/mês</span>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-1">
+                        <li class="flex items-start gap-2 text-sm">
+                            <i class="fa fa-check text-green-400 mt-1"></i>
+                            <span>Sites ilimitados</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm">
+                            <i class="fa fa-check text-green-400 mt-1"></i>
+                            <span>Domínio próprio incluso</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm">
+                            <i class="fa fa-check text-green-400 mt-1"></i>
+                            <span>IA avançada ilimitada</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm">
+                            <i class="fa fa-check text-green-400 mt-1"></i>
+                            <span>Sem marca d'água</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm">
+                            <i class="fa fa-check text-green-400 mt-1"></i>
+                            <span>Suporte prioritário</span>
+                        </li>
+                    </ul>
+                    <button class="btn-accent w-full bg-indigo-600 hover:bg-indigo-700">Assinar agora</button>
+                </div>
+
+                <!-- Premium -->
+                <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-8 flex flex-col card-hover">
+                    <h3 class="text-xl font-bold mb-1">Premium</h3>
+                    <p class="text-sm text-gray-500 mb-4">Para projetos maiores</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold">R$99</span>
+                        <span class="text-gray-500">/mês</span>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-1">
+                        <li class="flex items-start gap-2 text-sm">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span>Tudo do Profissional</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span>Hospedagem avançada</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span>Análises de acesso</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span>Conta de equipe</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span>Suporte dedicado</span>
+                        </li>
+                    </ul>
+                    <button class="btn-secondary w-full">Escolher plano</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">Perguntas frequentes</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <details class="bg-gray-900/50 border border-gray-800 rounded-xl p-5 open:pb-2">
+                    <summary class="cursor-pointer font-medium list-none flex items-center justify-between">
+                        Preciso saber programar?
+                        <i class="fa fa-chevron-down text-gray-500 transition-transform"></i>
+                    </summary>
+                    <p class="mt-2 text-gray-400 text-sm">Não! Nossa IA cria todo o código para você. Você só precisa descrever o que deseja em linguagem natural.</p>
+                </details>
+                <details class="bg-gray-900/50 border border-gray-800 rounded-xl p-5 open:pb-2">
+                    <summary class="cursor-pointer font-medium list-none flex items-center justify-between">
+                        Posso usar meu próprio domínio?
+                        <i class="fa fa-chevron-down text-gray-500 transition-transform"></i>
+                    </summary>
+                    <p class="mt-2 text-gray-400 text-sm">Sim! Nos planos Profissional e Premium você pode conectar seu domínio próprio com certificado SSL automático.</p>
+                </details>
+                <details class="bg-gray-900/50 border border-gray-800 rounded-xl p-5 open:pb-2">
+                    <summary class="cursor-pointer font-medium list-none flex items-center justify-between">
+                        O que acontece se eu precisar de alterações?
+                        <i class="fa fa-chevron-down text-gray-500 transition-transform"></i>
+                    </summary>
+                    <p class="mt-2 text-gray-400 text-sm">Basta pedir à IA! Você pode dizer: "mude as cores", "adicione uma galeria de fotos" ou "crie uma página de contato".</p>
+                </details>
+                <details class="bg-gray-900/50 border border-gray-800 rounded-xl p-5 open:pb-2">
+                    <summary class="cursor-pointer font-medium list-none flex items-center justify-between">
+                        Meus sites ficam salvos?
+                        <i class="fa fa-chevron-down text-gray-500 transition-transform"></i>
+                    </summary>
+                    <p class="mt-2 text-gray-400 text-sm">Sim! Todos os seus projetos ficam armazenados na sua conta, com histórico de todas as alterações.</p>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="border-t border-gray-900 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fa fa-magic text-indigo-500"></i>
+                        <span class="font-bold">SITE IA</span>
+                    </div>
+                    <p class="text-sm text-gray-500">Crie sites com inteligência artificial. Simples, rápido e profissional.</p>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-3">Plataforma</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#recursos" class="hover:text-white">Recursos</a></li>
+                        <li><a href="#exemplos" class="hover:text-white">Modelos</a></li>
+                        <li><a href="#planos" class="hover:text-white">Planos</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-3">Suporte</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white">Central de Ajuda</a></li>
+                        <li><a href="#" class="hover:text-white">Documentação</a></li>
+                        <li><a href="#" class="hover:text-white">Contato</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-3">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white">Termos de Uso</a></li>
+                        <li><a href="#" class="hover:text-white">Política de Privacidade</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-gray-900 text-center text-sm text-gray-500">
+                © 2026 Site IA. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de Login -->
+    <div id="loginModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="bg-gray-900 border border-gray-800 rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">Entrar na sua conta</h3>
+                <button id="fecharLogin" class="text-gray-400 hover:text-white">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <form id="formLogin" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">E-mail</label>
+                    <input type="email" class="input-field" placeholder="seu@email.com" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Senha</label>
+                    <input type="password" class="input-field" placeholder="••••••••" required>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                    <label class="flex items-center gap-2 text-gray-400">
+                        <input type="checkbox" class="accent-indigo-500"> Lembrar-me
+                    </label>
+                    <a href="#" class="text-indigo-400 hover:text-indigo-300">Esqueceu a senha?</a>
+                </div>
+                <button type="submit" class="btn-accent w-full">Entrar</button>
+            </form>
+            <p class="text-center text-sm text-gray-400 mt-4">
+                Ainda não tem conta? <button id="vaiCadastro" class="text-indigo-400 hover:text-indigo-300">Criar conta</button>
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro -->
+    <div id="cadastroModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="bg-gray-900 border border-gray-800 rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">Criar sua conta</h3>
+                <button id="fecharCadastro" class="text-gray-400 hover:text-white">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <form id="formCadastro" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Nome completo</label>
+                    <input type="text" class="input-field" placeholder="Seu nome" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">E-mail</label>
+                    <input type="email" class="input-field" placeholder="seu@email.com" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Senha</label>
+                    <input type="password" class="input-field" placeholder="Mínimo 6 caracteres" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Confirmar senha</label>
+                    <input type="password" class="input-field" placeholder="Repita a senha" required>
+                </div>
+                <div class="text-sm text-gray-400">
+                    <label class="flex items-start gap-2">
+                        <input type="checkbox" class="accent-indigo-500 mt-1" required>
+                        Li e concordo com os <a href="#" class="text-indigo-400">Termos de Uso</a> e a <a href="#" class="text-indigo-400">Política de Privacidade</a>.
+                    </label>
+                </div>
+                <button type="submit" class="btn-accent w-full">Criar conta</button>
+            </form>
+            <p class="text-center text-sm text-gray-400 mt-4">
+                Já tem conta? <button id="vaiLogin" class="text-indigo-400 hover:text-indigo-300">Entrar</button>
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal de Código -->
+    <div id="codigoModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 max-w-4xl w-full mx-4 shadow-2xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold">Código HTML Gerado</h3>
+                <button id="fecharCodigo" class="text-gray-400 hover:text-white">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-auto bg-black/50 rounded-lg p-4">
+                <pre id="codigoGerado" class="text-sm text-gray-300 whitespace-pre-wrap font-mono"></pre>
+            </div>
+            <div class="mt-4 flex justify-end gap-3">
+                <button id="copiarCodigo" class="btn-secondary text-sm">
+                    <i class="fa fa-copy mr-1"></i> Copiar
+                </button>
+                <button id="fecharCodigoBtn" class="btn-accent text-sm">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Publicação -->
+    <div id="publicarModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="bg-gray-900 border border-gray-800 rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl text-center">
+            <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa fa-check text-green-400 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Site Publicado! 🎉</h3>
+            <p class="text-gray-400 mb-4">Seu site está no ar. Acesse pelo link abaixo:</p>
+            <div class="bg-gray-800 rounded-lg p-3 mb-6">
+                <a href="#" id="linkSite" class="text-indigo-400 break-all">meusite.siteia.com.br</a>
+            </div>
+            <button id="fecharPublicar" class="btn-accent w-full">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="text-center">
+            <div class="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p id="loadingText" class="text-lg">Gerando seu site com IA...</p>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // VARIÁVEIS GLOBAIS
+        // ==========================================
+        let siteGerado = {
+            html: '',
+            prompt: '',
+            nome: ''
+        };
+
+        // ==========================================
+        // NAVEGAÇÃO E MENUS
+        // ==========================================
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Rolagem suave para links de âncora
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const alvo = document.querySelector(link.getAttribute('href'));
+                if (alvo) {
+                    alvo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // ==========================================
+        // EXEMPLOS DE PROMPT
+        // ==========================================
+        document.querySelectorAll('.exemplo-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById('userPrompt').value = btn.textContent.trim();
+                document.getElementById('userPrompt').focus();
+            });
+        });
+
+        // ==========================================
+        // MODAIS — LOGIN, CADASTRO, CÓDIGO, PUBLICAÇÃO
+        // ==========================================
+        function abrirModal(modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function fecharModal(modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        // Login
+        const loginModal = document.getElementById('loginModal');
+        document.getElementById('btnLogin').addEventListener('click', () => abrirModal(loginModal));
+        document.getElementById('btnLoginMobile').addEventListener('click', () => abrirModal(loginModal));
+        document.getElementById('fecharLogin').addEventListener('click', () => fecharModal(loginModal));
+        
+        // Cadastro
+        const cadastroModal = document.getElementById('cadastroModal');
+        document.getElementById('btnCadastro').addEventListener('click', () => abrirModal(cadastroModal));
+        document.getElementById('btnCadastroMobile').addEventListener('click', () => abrirModal(cadastroModal));
+        document.getElementById('fecharCadastro').addEventListener('click', () => fecharModal(cadastroModal));
+        
+        // Trocar entre modais
+        document.getElementById('vaiCadastro').addEventListener('click', () => {
+            fecharModal(loginModal);
+            abrirModal(cadastroModal);
+        });
+        document.getElementById('vaiLogin').addEventListener('click', () => {
+            fecharModal(cadastroModal);
+            abrirModal(loginModal);
+        });
+
+        // Fechar modais clicando fora
+        [loginModal, cadastroModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) fecharModal(modal);
+            });
+        });
+
+        // Formulários
+        document.getElementById('formLogin').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('✅ Login simulado! Em um sistema real, você seria redirecionado para seu painel.');
+            fecharModal(loginModal);
+        });
+
+        document.getElementById('formCadastro').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('✅ Conta criada com sucesso! Verifique seu e-mail para confirmar.');
+            fecharModal(cadastroModal);
+        });
+
+        // ==========================================
+        // GERAR SITE COM IA
+        // ==========================================
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const resultadoSecao = document.getElementById('resultadoSecao');
+        const sitePreview = document.getElementById('sitePreview');
+        const codigoModal = document.getElementById('codigoModal');
+        const codigoGerado = document.getElementById('codigoGerado');
+        const publicarModal = document.getElementById('publicarModal');
+
+        function mostrarCarregando(texto = 'Processando...') {
+            document.getElementById('loadingText').textContent = texto;
+            loadingOverlay.classList.remove('hidden');
+            loadingOverlay.classList.add('flex');
+        }
+
+        function esconderCarregando() {
+            loadingOverlay.classList.add('hidden');
+            loadingOverlay.classList.remove('flex');
+        }
+
+        // 📋 TEMPLATE DE SITE GERADO
+        function gerarTemplateSite(tipo, nome) {
+            const tipos = {
+                'loja': {
+                    titulo: nome || 'Minha Loja',
+                    descricao: 'Produtos de qualidade para você.',
+                    cor: '#4F46E5',
+                    secoes: `
+                        <section style="padding: 60px 20px; background: linear-gradient(135deg, #4F46E5, #7C3AED); color: white; text-align: center;">
+                            <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">${nome || 'Bem-vindo!'}</h1>
+                            <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto 2rem;">Seu lugar favorito para encontrar o que você ama.</p>
+                            <button style="background: white; color: #4F46E5; border: none; padding: 12px 30px; font-size: 1rem; border-radius: 6px; font-weight: bold; cursor: pointer;">Ver Produtos</button>
+                        </section>
+                        <section style="padding: 60px 20px; max-width: 1200px; margin: 0 auto;">
+                            <h2 style="text-align: center; font-size: 2rem; margin-bottom: 40px;">Nossos Produtos</h2>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+                                <div style="background: #f9fafb; border-radius: 10px; padding: 20px; text-align: center;">
+                                    <div style="background: #e5e7eb; height: 150px; border-radius: 6px; margin-bottom: 15px;"></div>
+                                    <h3 style="margin-bottom: 10px;">Produto 1</h3>
+                                    <p style="color: #4F46E5; font-weight: bold; font-size: 1.2rem;">R$ 99,90</p>
+                                    <button style="background: #4F46E5; color: white; border: none; padding: 8px 20px; border-radius: 4px; margin-top: 10px; cursor: pointer;">Comprar</button>
+                                </div>
+                                <div style="background: #f9fafb; border-radius: 10px; padding: 20px; text-align: center;">
+                                    <div style="background: #e5e7eb; height: 150px; border-radius: 6px; margin-bottom: 15px;"></div>
+                                    <h3 style="margin-bottom: 10px;">Produto 2</h3>
+                                    <p style="color: #4F46E5; font-weight: bold; font-size: 1.2rem;">R$ 149,90</p>
+                                    <button style="background: #4F46E5; color: white; border: none; padding: 8px 20px; border-radius: 4px; margin-top: 10px; cursor: pointer;">Comprar</button>
+                                </div>
+                                <div style="background: #f9fafb; border-radius: 10px; padding: 20px; text-align: center;">
+                                    <div style="background: #e5e7eb; height: 150px; border-radius: 6px; margin-bottom: 15px;"></div>
+                                    <h3 style="margin-bottom: 10px;">Produto 3</h3>
+                                    <p style="color: #4F46E5; font-weight: bold; font-size: 1.2rem;">R$ 79,90</p>
+                                    <button style="background: #4F46E5; color: white; border: none; padding: 8px 20px; border-radius: 4px; margin-top: 10px; cursor: pointer;">Comprar</button>
+                                </div>
+                            </div>
+                        </section>
+                        <footer style="background: #111827; color: white; padding: 40px 20px; text-align: center;">
+                            <p>&copy; 2026 ${nome || 'Minha Loja'}. Todos os direitos reservados.</p>
+                        </footer>
+                    `
+                },
+                'restaurante': {
+                    titulo: nome || 'Nosso Restaurante',
+                    descricao: 'Comida deliciosa, feita com amor.',
+                    cor: '#B45309',
+                    secoes: `
+                        <section style="padding: 80px 20px; background: linear-gradient(135deg, #B45309, #D97706); color: white; text-align: center;">
+                            <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">${nome || 'Bem-vindo!'}</h1>
+                            <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto 2rem;">Sabores que aquecem o coração.</p>
+                            <button style="background: white; color: #B45309; border: none; padding: 12px 30px; font-size: 1rem; border-radius: 6px; font-weight: bold; cursor: pointer;">Ver Cardápio</button>
+                        </section>
+                        <section style="padding: 60px 20px; max-width: 800px; margin: 0 auto;">
+                            <h2 style="text-align: center; font-size: 2rem; margin-bottom: 40px;">Nosso Cardápio</h2>
+                            <div style="display: grid; gap: 20px;">
+                                <div style="padding: 20px; border-bottom: 1px solid #e5e7eb;">
+                                    <h3 style="font-size:
